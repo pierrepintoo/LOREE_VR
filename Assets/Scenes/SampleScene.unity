@@ -156,7 +156,7 @@ AudioSource:
   m_PlayOnAwake: 1
   m_Volume: 1
   m_Pitch: 1
-  Loop: 0
+  Loop: 1
   Mute: 0
   Spatialize: 0
   SpatializePostEffects: 0
@@ -164,7 +164,7 @@ AudioSource:
   DopplerLevel: 1
   MinDistance: 1
   MaxDistance: 500
-  Pan2D: -1
+  Pan2D: 0
   rolloffMode: 0
   BypassEffects: 0
   BypassListenerEffects: 0
@@ -694,7 +694,6 @@ GameObject:
   - component: {fileID: 622847604}
   - component: {fileID: 622847603}
   - component: {fileID: 622847602}
-  - component: {fileID: 622847601}
   m_Layer: 0
   m_Name: BackLeftLed
   m_TagString: Untagged
@@ -717,20 +716,6 @@ Transform:
   m_Father: {fileID: 582139945}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &622847601
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 622847599}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d4e4600b8e5cb49af94441718d57e11b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  audio: {fileID: 82715543}
-  ledMaterial: {fileID: 2100000, guid: 6a23a12e97593445d8eb23545ca51b56, type: 2}
 --- !u!136 &622847602
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -842,8 +827,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d4e4600b8e5cb49af94441718d57e11b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  audio: {fileID: 1785385932}
+  audioSource: {fileID: 1785385932}
   ledMaterial: {fileID: 2100000, guid: 43486bf177f3e479cae0000e7cd112f7, type: 2}
+  fillMultiplier: 0.5
+  freqBand:
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
 --- !u!136 &676950816
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -1365,8 +1360,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d4e4600b8e5cb49af94441718d57e11b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  audio: {fileID: 82715543}
+  audioSource: {fileID: 82715543}
   ledMaterial: {fileID: 2100000, guid: 6a23a12e97593445d8eb23545ca51b56, type: 2}
+  fillMultiplier: 10
+  freqBand:
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
 --- !u!1 &1409915709
 GameObject:
   m_ObjectHideFlags: 0
@@ -1379,7 +1384,6 @@ GameObject:
   - component: {fileID: 1409915714}
   - component: {fileID: 1409915713}
   - component: {fileID: 1409915712}
-  - component: {fileID: 1409915711}
   m_Layer: 0
   m_Name: BackRightLed
   m_TagString: Untagged
@@ -1402,20 +1406,6 @@ Transform:
   m_Father: {fileID: 582139945}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1409915711
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1409915709}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d4e4600b8e5cb49af94441718d57e11b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  audio: {fileID: 1785385932}
-  ledMaterial: {fileID: 2100000, guid: 43486bf177f3e479cae0000e7cd112f7, type: 2}
 --- !u!136 &1409915712
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -1978,7 +1968,7 @@ AudioSource:
   m_PlayOnAwake: 1
   m_Volume: 1
   m_Pitch: 1
-  Loop: 0
+  Loop: 1
   Mute: 0
   Spatialize: 0
   SpatializePostEffects: 0
@@ -1986,7 +1976,7 @@ AudioSource:
   DopplerLevel: 1
   MinDistance: 1
   MaxDistance: 500
-  Pan2D: 1
+  Pan2D: 0
   rolloffMode: 0
   BypassEffects: 0
   BypassListenerEffects: 0
