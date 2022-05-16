@@ -23,6 +23,19 @@ public class PlayerController : MonoBehaviour
     Vector2 currentMouseDelta = Vector2.zero;
     Vector2 currentMouseDeltaVelocity = Vector2.zero;
 
+    private Transform player = null;
+
+    private Vector3 playerPosition = Vector3.zero;
+    private Vector3 oldPlayerPosition = Vector3.zero;
+
+    private float immobileTimer = 0.0f;
+
+    private bool[] sections = {false, false, false, false};
+
+    private int sectionCounter = 0;
+
+    private bool canCheckIfImmobile = false;
+
     void Start()
     {
         controller = GetComponent<CharacterController>();
@@ -31,12 +44,40 @@ public class PlayerController : MonoBehaviour
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
         }
+
+        player = GetComponent<Transform>();
+
+        playerPosition = player.position;
     }
 
     void Update()
     {
         UpdateMouseLook();
         UpdateMovement();
+
+        if (canCheckIfImmobile) {
+            checkIfImmobileForSection(sectionCounter);
+        }
+
+    }
+
+    void checkIfImmobileForSection(int section = 0) {
+        Debug.Log("section" + section);
+        playerPosition = player.position;
+        if (playerPosition == oldPlayerPosition) {
+            Debug.Log("immobile");
+            immobileTimer += Time.deltaTime;
+
+            if(immobileTimer > 4 && section < 4 && !sections[section]) {
+                immobileTimer = 0.0f;
+                sectionCounter += 1;
+                sections[section] = true;
+            }
+        } else {
+            immobileTimer = 0.0f;
+        }
+
+        oldPlayerPosition = player.position;
     }
 
     void UpdateMouseLook()
