@@ -10,6 +10,11 @@ public class AmbianceController : MonoBehaviour
     private Transform character = null;
     private float charPositionX = 0.0f;
 
+    [SerializeField] GameObject BodySourceView;
+
+    private BodySourceView _BodySourceViewManager;
+    private Vector3 mainBodyPosition;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -19,9 +24,11 @@ public class AmbianceController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        charPositionX = character.position.x;
+        _BodySourceViewManager = BodySourceView.GetComponent<BodySourceView>();
+        mainBodyPosition = _BodySourceViewManager.mainBodyPosition;
+        charPositionX = mainBodyPosition.x;
         rightSoundAmbiance.volume = 1.0f + (charPositionX * 0.1f);
         leftSoundAmbiance.volume = 1.0f - (charPositionX * 0.1f);
-        Debug.Log(charPositionX);
+        // Debug.Log(charPositionX);
     }
 }
