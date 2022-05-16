@@ -110,7 +110,11 @@ Material:
     - _WorkflowMode: 0
     - _ZWrite: 1
     - _noiseScale: 2.45
+<<<<<<< HEAD
     - _origin: -5.9019694
+=======
+    - _origin: 9.162396
+>>>>>>> f4ad5f29ee0aa46a2cbc3b749fbbe9d0d4b47b49
     - _spread: 5
     - _test: 0
     m_Colors:

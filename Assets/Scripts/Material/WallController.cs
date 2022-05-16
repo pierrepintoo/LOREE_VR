@@ -6,6 +6,10 @@ public class WallController : MonoBehaviour
 {
     [SerializeField] Material RoomMaterial;
     [SerializeField] GameObject player;
+    [SerializeField] GameObject BodySourceView;
+
+    private BodySourceView _BodySourceViewManager;
+    private Vector3 mainBodyPosition;
 
     private float charPositionX = 0.0f;
     private Transform character = null;
@@ -21,15 +25,18 @@ public class WallController : MonoBehaviour
         // roomMaterial = GetComponent<Material>();
         // Debug.Log("material room", roomMaterial.GetObject("_origin"));
         // Debug.Log(roomMaterial._origin);
-        charPositionX = character.position.x;
+        charPositionX = 0;
     }
 
     // Update is called once per frame
     void Update()
     {
-        charPositionX = character.position.x;
+        _BodySourceViewManager = BodySourceView.GetComponent<BodySourceView>();
+        mainBodyPosition = _BodySourceViewManager.mainBodyPosition;
+        charPositionX = mainBodyPosition.x;
         originGradient = charPositionX;
         // roomMaterial = GetComponent<Material>();
+        // Debug.Log(charPositionX);
         RoomMaterial.SetFloat("_origin", -originGradient);
     }
 }
