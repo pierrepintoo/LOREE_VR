@@ -112,6 +112,8 @@ Material:
     - _noiseScale: 2.45
     - _origin: -0.49152493
     - _spread: 1.02
+    - _origin: -5.9019694
+    - _spread: 5
     - _test: 0
     m_Colors:
     - _BaseColor: {r: 0, g: 0, b: 0, a: 1}
