@@ -21,6 +21,9 @@ public class WallController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        RoomMaterial.SetColor("_colorA", new Color(0.1f, 0.1f, 0.1f));
+        RoomMaterial.SetColor("_colorB", new Color(0.1f, 0.1f, 0.1f));
+        
         character = player.GetComponent<Transform>();
         // roomMaterial = GetComponent<Material>();
         // Debug.Log("material room", roomMaterial.GetObject("_origin"));
@@ -33,7 +36,8 @@ public class WallController : MonoBehaviour
     {
         _BodySourceViewManager = BodySourceView.GetComponent<BodySourceView>();
         mainBodyPosition = _BodySourceViewManager.mainBodyPosition;
-        charPositionX = mainBodyPosition.x;
+        // charPositionX = mainBodyPosition.x;
+        charPositionX = character.position.x;
         originGradient = charPositionX;
         // roomMaterial = GetComponent<Material>();
         // Debug.Log(charPositionX);
