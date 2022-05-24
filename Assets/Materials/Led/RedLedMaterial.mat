@@ -107,11 +107,7 @@ Material:
     - _DetailNormalMapScale: 1
     - _DstBlend: 0
     - _EnvironmentReflections: 1
-<<<<<<< HEAD
-    - _Fill: 0.15969932
-=======
-    - _Fill: 0.35804078
->>>>>>> f4ad5f29ee0aa46a2cbc3b749fbbe9d0d4b47b49
+    - _Fill: 0
     - _GlossMapScale: 0
     - _Glossiness: 0
     - _GlossyReflections: 0

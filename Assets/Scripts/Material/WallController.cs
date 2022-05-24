@@ -33,7 +33,8 @@ public class WallController : MonoBehaviour
     {
         _BodySourceViewManager = BodySourceView.GetComponent<BodySourceView>();
         mainBodyPosition = _BodySourceViewManager.mainBodyPosition;
-        charPositionX = mainBodyPosition.x;
+        // charPositionX = mainBodyPosition.x;
+        charPositionX = character.position.x;
         originGradient = charPositionX;
         // roomMaterial = GetComponent<Material>();
         // Debug.Log(charPositionX);
