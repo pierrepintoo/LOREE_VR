@@ -103,7 +103,7 @@ public class BodySourceView : MonoBehaviour
 
             if (!bodyIds.Contains(body.TrackingId)) {
                 bodyIds.Add(body.TrackingId);
-                Debug.Log(bodyIdsArray.Length + 1);
+                // Debug.Log(bodyIdsArray.Length + 1);
                 counter += 1;
             }
 

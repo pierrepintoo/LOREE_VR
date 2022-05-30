@@ -36,7 +36,7 @@ public class LeftSoundController : MonoBehaviour
 
             yield return new WaitForSeconds(5);
 
-            GameObject.Find("RightSoundAmbiance").GetComponent<AudioSource>().volume = 1;
+            GameObject.Find("RightSoundAmbiance").GetComponent<AudioSource>().volume = 0.5f;
             audioSource.panStereo = -1;
             yield return null;
     }

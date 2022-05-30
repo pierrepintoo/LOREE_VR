@@ -25,6 +25,7 @@ public class WallController : MonoBehaviour
         RoomMaterial.SetColor("_colorB", new Color(0.1f, 0.1f, 0.1f));
         
         character = player.GetComponent<Transform>();
+        _BodySourceViewManager = BodySourceView.GetComponent<BodySourceView>();
         // roomMaterial = GetComponent<Material>();
         // Debug.Log("material room", roomMaterial.GetObject("_origin"));
         // Debug.Log(roomMaterial._origin);
@@ -34,10 +35,9 @@ public class WallController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        _BodySourceViewManager = BodySourceView.GetComponent<BodySourceView>();
         mainBodyPosition = _BodySourceViewManager.mainBodyPosition;
-        // charPositionX = mainBodyPosition.x;
-        charPositionX = character.position.x;
+        charPositionX = -mainBodyPosition.x;
+        // charPositionX = character.position.x;
         originGradient = charPositionX;
         // roomMaterial = GetComponent<Material>();
         // Debug.Log(charPositionX);
