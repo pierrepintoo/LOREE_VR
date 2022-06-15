@@ -13,6 +13,9 @@ public class WallController : MonoBehaviour
 
     private float charPositionX = 0.0f;
     private Transform character = null;
+    private float previousCharPosX = 0.0f;
+
+    private bool isFixed = false;
 
     // private Material roomMaterial = null;
 
@@ -35,6 +38,18 @@ public class WallController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        // if (charPositionX > previousCharPosX - 0.01f && charPositionX < previousCharPosX + 0.01f) {
+        //     isFixed = true;
+        // } else {
+        //     isFixed = false;
+        //     previousCharPosX = charPositionX;
+        // }
+
+        // if (isFixed) {
+        //     Debug.Log("FIXED");
+        // } else {
+        //     Debug.Log("NOT FIXEEEEEEEEEEEEEEED");
+        // }
         mainBodyPosition = _BodySourceViewManager.mainBodyPosition;
         charPositionX = -mainBodyPosition.x;
         // charPositionX = character.position.x;

@@ -8,7 +8,7 @@ using UnityEditor.VFX.UI;
 
 public class VoixOffController : MonoBehaviour
 {
-    private VisualEffect _visualEffect;
+    public VisualEffect _visualEffect;
     AudioSource _audioSource;
     
     public static float[] _samples = new float[512];
@@ -43,8 +43,8 @@ public class VoixOffController : MonoBehaviour
         BandBuffer();
         CreateAudioBand();
         GetAmplitude();
-        _visualEffect.SetFloat("Volume", Mathf.Exp(_Amplitude * 3));
-        _visualEffect.SetFloat("Shiny", Mathf.Max(_Amplitude, 0.2f));
+        _visualEffect.SetFloat("Volume", Mathf.Exp(_Amplitude * 4));
+        // _visualEffect.SetFloat("Shiny", Mathf.Max(_Amplitude, 0.2f));
     }
 
     void GetAmplitude()

@@ -27,8 +27,8 @@ public class AmbianceController : MonoBehaviour
         _BodySourceViewManager = BodySourceView.GetComponent<BodySourceView>();
         mainBodyPosition = _BodySourceViewManager.mainBodyPosition;
         charPositionX = mainBodyPosition.x;
-        rightSoundAmbiance.volume = 0.5f + (charPositionX * 0.1f);
-        leftSoundAmbiance.volume = 0.5f - (charPositionX * 0.1f);
+        // rightSoundAmbiance.volume = 0.5f + (charPositionX * 0.1f);
+        // leftSoundAmbiance.volume = 0.5f - (charPositionX * 0.1f);
         // Debug.Log(charPositionX);
     }
 }

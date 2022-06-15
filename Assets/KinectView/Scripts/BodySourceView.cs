@@ -13,7 +13,6 @@ public class BodySourceView : MonoBehaviour
     private BodySourceManager _BodyManager;
 
     private ulong[] bodyIdsArray = {0};
-
     
     private Dictionary<Kinect.JointType, Kinect.JointType> _BoneMap = new Dictionary<Kinect.JointType, Kinect.JointType>()
     {
@@ -117,7 +116,7 @@ public class BodySourceView : MonoBehaviour
                 }
                 
                 RefreshBodyObject(body, _Bodies[body.TrackingId]);
-                mainBodyPosition = GetVector3FromJoint(body.Joints[Kinect.JointType.Head]);
+                mainBodyPosition = GetVector3FromJoint(body.Joints[Kinect.JointType.SpineMid]);
             }
             // ulong[] _bodiesArray = _Bodies.ToArray();
             if (body.TrackingId == bodyIdsArray[counter - 1]) {
