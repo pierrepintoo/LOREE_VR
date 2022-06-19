@@ -96,8 +96,8 @@ MonoBehaviour:
         m_SerializableType: System.Single, mscorlib, Version=4.0.0.0, Culture=neutral,
           PublicKeyToken=b77a5c561934e089
       m_SerializableObject: 0
-    min: -Infinity
-    max: Infinity
+    min: 0
+    max: 100000
     enumValues: []
     descendantCount: 0
   m_ImportDependencies: []
@@ -6791,15 +6791,17 @@ MonoBehaviour:
   m_Category: 
   m_Min:
     m_Type:
-      m_SerializableType: 
-    m_SerializableObject: 
+      m_SerializableType: System.Single, mscorlib, Version=4.0.0.0, Culture=neutral,
+        PublicKeyToken=b77a5c561934e089
+    m_SerializableObject: 0
   m_Max:
     m_Type:
-      m_SerializableType: 
-    m_SerializableObject: 
+      m_SerializableType: System.Single, mscorlib, Version=4.0.0.0, Culture=neutral,
+        PublicKeyToken=b77a5c561934e089
+    m_SerializableObject: 100000
   m_IsOutput: 0
   m_EnumValues: []
-  m_ValueFilter: 0
+  m_ValueFilter: 1
   m_Tooltip: 
   m_Nodes:
   - m_Id: 0

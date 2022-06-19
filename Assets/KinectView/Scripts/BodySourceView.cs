@@ -8,6 +8,8 @@ public class BodySourceView : MonoBehaviour
     public Material BoneMaterial;
     public GameObject BodySourceManager;
     public Vector3 mainBodyPosition;
+    public Vector3 leftHandPosition;
+    public Vector3 rightHandPosition;
     
     private Dictionary<ulong, GameObject> _Bodies = new Dictionary<ulong, GameObject>();
     private BodySourceManager _BodyManager;
@@ -117,6 +119,8 @@ public class BodySourceView : MonoBehaviour
                 
                 RefreshBodyObject(body, _Bodies[body.TrackingId]);
                 mainBodyPosition = GetVector3FromJoint(body.Joints[Kinect.JointType.SpineMid]);
+                leftHandPosition = GetVector3FromJoint(body.Joints[Kinect.JointType.HandLeft]);
+                rightHandPosition = GetVector3FromJoint(body.Joints[Kinect.JointType.HandRight]);
             }
             // ulong[] _bodiesArray = _Bodies.ToArray();
             if (body.TrackingId == bodyIdsArray[counter - 1]) {

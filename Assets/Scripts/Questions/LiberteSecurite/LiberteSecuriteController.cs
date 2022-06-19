@@ -21,16 +21,20 @@ public class LiberteSecuriteController : MonoBehaviour
 
     [SerializeField] PermanenteEphemereController PermanenteEphemereController;
 
+    [SerializeField] AudioSource EphemereAmbianceBefore;
+    [SerializeField] AudioSource PermanenteAmbianceBefore;
+
     private BodySourceView _BodySourceViewManager;
     private bool isCheckingPosition;
     private bool isGreen = false;
     private bool isOrange = false;
     private float playerX = 0f;
+    private float charPositionX = 0f;
 
     // Start is called before the first frame update
     void Start()
     {
-        
+
     }
 
     // Update is called once per frame
@@ -41,20 +45,35 @@ public class LiberteSecuriteController : MonoBehaviour
             // position = CenterDetectionZoneController.mainBodyPosition;
             
             playerX = CenterDetectionZoneController.playerX;
+            charPositionX = CenterDetectionZoneController.charPositionX;
             liberteVFX.SetFloat("Arc", playerX);
             securiteVFX.SetFloat("Arc", -playerX);
         }
 
         if (!isGreen && !isOrange) {
-            rightSoundAmbiance.volume = 0.5f + (playerX * 0.1f);
-            leftSoundAmbiance.volume = 0.5f - (playerX * 0.1f);
+
+            leftSoundAmbiance.volume = charPositionX.Remap(-5f, 5f, 0f, .3f);
+            rightSoundAmbiance.volume = charPositionX.Remap(-5f, 5f, .3f, 0f);
+
+            // leftSoundAmbiance.volume = playerX.Remap(-8f, 8f, 0f, .2f);
+            // rightSoundAmbiance.volume = playerX.Remap(-8f, 8f, .2f, 0f);
 
             // rightSoundAmbiance.volume = 0.5f + (charPositionX * 0.1f);
             // leftSoundAmbiance.volume = 0.5f - (charPositionX * 0.1f);
 
             // vfx.SetFloat("Arc", playerX.Remap(-8, 8, -10, 10));
-            liberteVFX.SetFloat("Arc", playerX.Remap(-8, 8, -10, 10));
-            securiteVFX.SetFloat("Arc", -playerX.Remap(-8, 8, -10, 10));
+            liberteVFX.SetFloat("Arc", charPositionX.Remap(-8, 8, -10, 10));
+            securiteVFX.SetFloat("Arc", -charPositionX.Remap(-8, 8, -10, 10));
+
+            if (charPositionX.Remap(-8, 8, -10, 10) == 10f) {
+                securiteVFX.SetFloat("Count", 0f);
+
+            } else if (-charPositionX.Remap(-8, 8, -10, 10) == 10f) {
+                liberteVFX.SetFloat("Count", 0f);
+            }
+
+            // liberteVFX.SetFloat("Arc", playerX.Remap(-8, 8, -10, 10));
+            // securiteVFX.SetFloat("Arc", -playerX.Remap(-8, 8, -10, 10));
         } else if (isOrange) {
             securiteVFX.SetFloat("Arc", 10f);
             liberteVFX.SetFloat("Arc", -10f);
@@ -66,10 +85,10 @@ public class LiberteSecuriteController : MonoBehaviour
     }
 
     public IEnumerator ValidLiberteSecurite() {
-        if (playerX < 0f) {
+        if (charPositionX.Remap(-8, 8, -10, 10) < 0f) {
             isOrange = true;
             liberteVFX.SetFloat("Count", 0f);
-        } else if (playerX > 0f) {
+        } else if (charPositionX.Remap(-8, 8, -10, 10) > 0f) {
             securiteVFX.SetFloat("Count", 0f);
             isGreen = true;
         }
@@ -79,19 +98,26 @@ public class LiberteSecuriteController : MonoBehaviour
         securiteVFX.SetFloat("Count", 0f);
 
         yield return new WaitForSeconds(3f);
-        introBruit.DOFade(.1f, 5f);
+        introBruit.DOFade(.2f, 5f);
         voixOffVFX.SetFloat("Count", 100000);
-        voixOff.DOScale(1f, .3f);
+        // voixOff.DOScale(1f, .3f);
         voixOffContexteSujetAudio.Play();
     
         yield return new WaitForSeconds(25f);
+        rightSoundAmbiance.DOFade(0f, 2f);
+        leftSoundAmbiance.DOFade(0f, 2f);
         introBruit.DOFade(0f, 5f);
         voixOffVFX.SetFloat("Count", 0);
         PermanenteEphemereVFX.SetFloat("Count", 25000);
         PermanenteEphemereController.isCheckingPositionPE = true;
-        PermanenteEphemereController.canPlayImmobileAudioPE = true;
-        PermanenteEphemereController.isCheckingImmobilePE = true;
-        PermanenteEphemereController.PermanenteAmbiance.DOFade(.5f, .3f);
-        PermanenteEphemereController.EphemereAmbiance.DOFade(.5f, .3f);
+
+        PermanenteAmbianceBefore.Play();
+        EphemereAmbianceBefore.Play();
+        // PermanenteEphemereController.PermanenteAmbiance.DOFade(.5f, .3f);
+        // PermanenteEphemereController.EphemereAmbiance.DOFade(.5f, .3f);
+
+        yield return new WaitForSeconds(3f);
+        PermanenteEphemereController.canPlayImmobileAudioPEAA = true;
+        PermanenteEphemereController.isCheckingImmobilePEAA = true;
     }
 }

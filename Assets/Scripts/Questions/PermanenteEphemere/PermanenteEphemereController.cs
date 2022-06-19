@@ -21,8 +21,9 @@ public class PermanenteEphemereController : MonoBehaviour
     [SerializeField] AudioSource onImmobileAudio;
     [SerializeField] AudioSource PermanenteContexte;
     [SerializeField] AudioSource EphemereContexte;
-    public AudioSource EphemereAmbiance;
-    public AudioSource PermanenteAmbiance;
+    [SerializeField] AudioSource EphemereAmbiance;
+    [SerializeField] AudioSource PermanenteAmbiance;
+    [SerializeField] AudioSource Shutdown;
 
     [SerializeField] UnityEngine.VFX.VisualEffect voixOffPermanenteVFX;
     [SerializeField] UnityEngine.VFX.VisualEffect voixOffEphemereVFX;
@@ -35,39 +36,50 @@ public class PermanenteEphemereController : MonoBehaviour
     private bool isBlue = false;
     private bool isRose = false;
     private bool isImmobile = false;
-    public bool canPlayImmobileAudioPE = true;
-    public bool isCheckingImmobilePE = true;
+    public bool canPlayImmobileAudioPEAA = false; // SET TO FALSE FOR PROD
+    public bool isCheckingImmobilePEAA = false; // SET TO FALSE FOR PROD
 
     private float charPositionX = 0.0f;
 
     private float deltaPosition = 1f;
 
-    private float oldPositionX = 0f;
+    private float oldCharacterPositionX = 0f;
 
     private float timerImmobile = 0f;
 
-    public bool isCheckingPositionPE = true;
+    public bool isCheckingPositionPE = false;
 
     // Start is called before the first frame update
     void Start()
     {
-        // StartCoroutine(ValidPermanenteEphemere());
-
+        
+        // StartCoroutine(test());
+        // playAmbiances();
         _BodySourceViewManager = BodySourceView.GetComponent<BodySourceView>();
         vfx = GetComponent<VisualEffect>();
+    }
+
+    IEnumerator test() {
+            // voixOffPermanenteVFX.SetFloat("Count", 100000);
+        PermanenteContexte.Play();
+
+        EphemereAmbiance.DOFade(1f, 10f);
+        yield return new WaitForSeconds(8f);
+        Shutdown.Play();
     }
 
     // Update is called once per frame
     void Update()
     {
+        // Debug.Log(canPlayImmobileAudioPE);
         if (isCheckingPositionPE == true) {
         // KINECT VERSION
-            // mainBodyPosition = _BodySourceViewManager.mainBodyPosition;
-            // deltaPosition += Mathf.Abs(charPositionX - oldPositionX);
-            // charPositionX = -mainBodyPosition.x;
-            // charPositionX -= 1f;
-            // Debug.Log(Mathf.Abs(charPositionX - oldPositionX));
-            // if (Mathf.Abs(playerX - oldPositionX) <= 0.005) {
+            mainBodyPosition = _BodySourceViewManager.mainBodyPosition;
+            // deltaPosition += Mathf.Abs(charPositionX - oldCharacterPositionX);
+            charPositionX = -mainBodyPosition.x;
+            charPositionX -= 1f;
+            // Debug.Log(Mathf.Abs(charPositionX - oldCharacterPositionX));
+            // if (Mathf.Abs(playerX - oldCharacterPositionX) <= 0.005) {
             //     deltaPosition = 1f;
             //     Debug.Log("Reset");
             // } else {
@@ -79,68 +91,42 @@ public class PermanenteEphemereController : MonoBehaviour
 
 
             playerX = player.position.x;
-            deltaPosition += Mathf.Abs(playerX - oldPositionX) / 50;
 
-            if (Mathf.Abs(playerX - oldPlayerPositionX) <= 0.005) {
-                deltaPosition = 1f;
-                Debug.Log("Reset");
+            if (Mathf.Abs(charPositionX - oldCharacterPositionX) > 0.1f) {
+                isImmobile = false;
+                timerImmobile = 0;
+                onImmobileAudio.Stop();
+                deltaPosition += Mathf.Abs(playerX - oldCharacterPositionX) / 10;
             } else {
-                Debug.Log(deltaPosition);
+                deltaPosition = 1f;
+                isImmobile = true;
             }
 
             vfx.SetFloat("Intensity", deltaPosition);
-
+            Debug.Log(canPlayImmobileAudioPEAA);
             
-            // vfx.SetFloat("direction", charPositionX * 5 / 10);
-            // if (charPositionX < 0) {
-            //     vfx.SetFloat("origin", Mathf.Max(charPositionX, -10f));
-            //     // vfx.SetFloat("direction", Mathf.Max(Mathf.Min(charPositionX, -1f), -2f));
-
-            // } else if (charPositionX > 0) {
-            //     vfx.SetFloat("origin", Mathf.Min(charPositionX, 10f));
-            //     // vfx.SetFloat("direction", Mathf.Min(Mathf.Max(charPositionX, 1f), 2f));
-            // }
-            // vfx.SetFloat("drag", charPositionX);
-            // Debug.Log(charPositionX);
-
-            if (player.position.x == oldPlayerPositionX) {
-                isImmobile = true;
-            } else {
-                timerImmobile = 0;
-                isImmobile = false;
-                if (onImmobileAudio.isPlaying == true) {
-                    onImmobileAudio.Stop();
-                    onImmobileAudio.volume = 0f;
-                    // rightSound.DOFade(0.2f, 1f);
-                    // leftSound.DOFade(0.2f, 1f);
-                    Debug.Log("non immobile and is playing");
-                }
-            }
-
-            
-            if (isImmobile && isCheckingImmobilePE) {
+            if (isImmobile && isCheckingImmobilePEAA) {
                 // LANCE LE CONTEUR ET SI IL EST AU DESSUS DE 3 SECONDES, ON VALIDE LA REPONSE
                 timerImmobile += Time.deltaTime;
                 // Debug.Log("isImmobile " + timerImmobile);
-                
-                if (onImmobileAudio.isPlaying == false && canPlayImmobileAudioPE) {
-                    // onImmobileAudio.Play();
+                if (onImmobileAudio.isPlaying == false && canPlayImmobileAudioPEAA == true && timerImmobile >= 2f) {
                     onImmobileAudio.volume = 1f;
-                    onImmobileAudio.PlayDelayed(1f);
-                    // rightSound.DOFade(0.05f, 4f);
-                    // leftSound.DOFade(0.05f, 4f);
+                    onImmobileAudio.Play();
                 }
                 
                 
-                if (timerImmobile > 9f) {
-                    canPlayImmobileAudioPE = false;
-                    if (playerX <= 0) {
+                if (timerImmobile > 5f) {
+                    canPlayImmobileAudioPEAA = false;
+                    isCheckingImmobilePEAA = false;
+                    if (charPositionX.Remap(-8, 8, -10, 10) >= 0) {
+                        Debug.Log("t'es à gauche");
                         isRose = true;
-                        PermanenteAmbiance.DOFade(1f, .5f);
-                        EphemereAmbiance.DOFade(0f, .5f);
-                    } else if (playerX >= 0) {
+                        PermanenteAmbiance.DOFade(.5f, .5f);
+                        EphemereAmbiance.DOFade(0f, 2f);
+                    } else if (charPositionX.Remap(-8, 8, -10, 10) <= 0) {
+                        Debug.Log("t'es à droite");
                         isBlue = true;
-                        EphemereAmbiance.DOFade(1f, .5f);
+                        EphemereAmbiance.DOFade(.5f, 2f);
                         PermanenteAmbiance.DOFade(0f, .5f);
                     }
 
@@ -157,41 +143,51 @@ public class PermanenteEphemereController : MonoBehaviour
 
 
             if (!isBlue && !isRose) {
-                EphemereAmbiance.volume = (0.5f + (playerX * 0.1f)).Remap(-8f, 8f, 0f, 0.2f);
-                PermanenteAmbiance.volume = (0.5f - (playerX * 0.1f)).Remap(-8f, 8f, 0f, 0.2f);
+                PermanenteAmbiance.volume = charPositionX.Remap(-5f, 5f, 0f, .3f);
+                EphemereAmbiance.volume = charPositionX.Remap(-5f, 5f, .3f, 0f);
 
-                // EphemereAmbiance.volume = 0.5f + (charPositionX * 0.1f);
-                // PermanenteAmbiance.volume = 0.5f - (charPositionX * 0.1f);
-                vfx.SetFloat("origin", playerX.Remap(-8, 8, -10, 10));
+                vfx.SetFloat("origin", -charPositionX.Remap(-8, 8, -8, 8));
             } else if (isRose) {
                 vfx.SetFloat("origin", -10);
             } else if (isBlue) {
                 vfx.SetFloat("origin", 10);
             }
         }
-        oldPositionX = charPositionX;
+        oldCharacterPositionX = charPositionX;
         oldPlayerPositionX = player.position.x;
     }
 
-    public IEnumerator ValidPermanenteEphemere() {
+    IEnumerator ValidPermanenteEphemere() {
         yield return new WaitForSeconds(5f);
         vfx.SetFloat("Count", 0f);
         
-        yield return new WaitForSeconds(2f);
-
         if (isBlue) {
-            voixOffPermanenteVFX.SetFloat("Count", 100000);
-            PermanenteAmbiance.DOFade(.1f, 1f);
+            PermanenteAmbiance.DOFade(.3f, 2f);
+            EphemereAmbiance.DOFade(0f, 2f);
             
-            yield return new WaitForSeconds(1f);
-            EphemereContexte.Play();
-        } else if (isRose) {
+            yield return new WaitForSeconds(2f);
             voixOffEphemereVFX.SetFloat("Count", 100000);
-            EphemereAmbiance.DOFade(.1f, 1f);
+            EphemereContexte.Play();
+
+            yield return new WaitForSeconds(6f);
+            PermanenteAmbiance.DOFade(1f, 8f);
+
+        } else if (isRose) {
+            EphemereAmbiance.DOFade(.3f, 2f);
+            PermanenteAmbiance.DOFade(0f, 2f);
             
-            yield return new WaitForSeconds(1f);
+            yield return new WaitForSeconds(2f);
+            voixOffPermanenteVFX.SetFloat("Count", 100000);
             PermanenteContexte.Play();
+
+            yield return new WaitForSeconds(6f);
+            EphemereAmbiance.DOFade(1f, 8f);
         }
+    }
+
+    public void playAmbiances() {
+        PermanenteAmbiance.Play();
+        EphemereAmbiance.Play();
     }
 
 }

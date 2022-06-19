@@ -29,6 +29,7 @@ public class CenterDetectionZoneController : MonoBehaviour
 
     private float playerZ;
     public float playerX;
+    public float charPositionX;
     private BodySourceView _BodySourceViewManager;
     private Vector3 mainBodyPosition;
 
@@ -37,6 +38,7 @@ public class CenterDetectionZoneController : MonoBehaviour
     private Vector3 positionBarScan = new Vector3(0f, 0f, 0f);
     private Vector3 oldPlayerPosition = new Vector3(0f, 0f, 0f);
     private Vector3 oldCharacterPosition = new Vector3(0f, 0f, 0f);
+    private float oldCharacterPositionX = 0f;
     private bool isDetected = false;
 
     private AudioSource voixOff;
@@ -53,9 +55,11 @@ public class CenterDetectionZoneController : MonoBehaviour
     
     private float timerImmobile = 0f;
 
-    public bool isCheckingPosition = false;
-    private bool isCheckingImmobile = false;
-    public bool canPlayImmobileAudio = false;
+    public bool isCheckingPosition = true; // SET TO FALSE FOR PROD
+    public bool isCheckingImmobile = false; // SET TO FALSE FOR PROD
+    public bool canPlayImmobileAudioLS = false; // SET TO FALSE FOR PROD
+
+    public float deltaPositionX = 0f;
     // Start is called before the first frame update
     void Start()
     {        
@@ -76,7 +80,7 @@ public class CenterDetectionZoneController : MonoBehaviour
     private IEnumerator ScanUser() {
         Sequence scan = DOTween.Sequence();
 
-        scan.Append(BarScanGameObject.transform.DOMoveY(9.86f, 1.5f).SetEase(Ease.InOutExpo))
+        scan.Append(BarScanGameObject.transform.DOMoveY(12.86f, 1.5f).SetEase(Ease.InOutExpo))
             .Append(BarScanGameObject.transform.DOMoveY(-0.1f, 1.5f).SetEase(Ease.InOutExpo));
 
         yield return new WaitForSeconds(2f);
@@ -91,6 +95,7 @@ public class CenterDetectionZoneController : MonoBehaviour
         voixOff.Play(0);
 
         yield return new WaitForSeconds(27.5f);
+        // yield return new WaitForSeconds(0.5f);
         introBruit.DOFade(0f, .5f);
         LiberteSecurite.SetActive(true);
         // PermanenteEphemere.SetActive(true);
@@ -102,7 +107,8 @@ public class CenterDetectionZoneController : MonoBehaviour
         leftSound.Play();
 
         yield return new WaitForSeconds(3f);
-        canPlayImmobileAudio = true;
+        Debug.Log("set canplay to true");
+        canPlayImmobileAudioLS = true;
         // Sequence displayColors = DOTween.Sequence();
         // displayColors.Append(RoomMaterial.DOColor(new Color(0.9528301f, 0f, 0f), "_colorA", 0.3f))
         // .Append(RoomMaterial.DOColor(new Color(0.1011229f, 0f, 1f), "_colorB", 0.3f));
@@ -120,39 +126,53 @@ public class CenterDetectionZoneController : MonoBehaviour
     void Update()
     {
         if (isCheckingPosition) {
+            // Debug.Log(timerImmobile);
             playerZ = player.position.z;
             playerX = player.position.x;
             // Debug.Log("HEY" + playerZ);
             mainBodyPosition = _BodySourceViewManager.mainBodyPosition;
+            charPositionX = mainBodyPosition.x;
+            // Debug.Log(mainBodyPosition);
             // TO DO : POSITIONS DE DETECTIONS A REGLER POUR QUE CA MARCHE BIEN
-            // if (mainBodyPosition.x > -2f && mainBodyPosition.x < 2f && mainBodyPosition.z > 10f && mainBodyPosition.z < 21f && !isDetected) {
+            // if (mainBodyPosition.x > -2f && mainBodyPosition.x < 2f && mainBodyPosition.z > 15f && mainBodyPosition.z < 25f && !isDetected) {
             //     isDetected = true;
             //     scanSound.Play(0);
             //     StartCoroutine(ScanUser());
             // }
 
-            if (playerZ <= 6.5f && playerZ >= 6f && !isDetected) {
-                isDetected = true;
-                scanSound.Play(0);
-                StartCoroutine(ScanUser());
-                isCheckingPosition = false;
-            }
+            // if (playerZ <= 6.5f && playerZ >= 6f && !isDetected) {
+            //     isDetected = true;
+            //     scanSound.Play(0);
+            //     StartCoroutine(ScanUser());
+            //     isCheckingPosition = false;
+            // }
 
-            if (player.position == oldPlayerPosition) {
-                isImmobile = true;
-            } else {
-                timerImmobile = 0;
-                isImmobile = false;
-                if (onImmobileAudio.isPlaying == true) {
-                    onImmobileAudio.Stop();
-                    onImmobileAudio.volume = 0f;
-                    // rightSound.DOFade(0.2f, 1f);
-                    // leftSound.DOFade(0.2f, 1f);
-                    Debug.Log("non immobile and is playing");
-                }
+            // if (player.position == oldPlayerPosition) {
+            //     isImmobile = true;
+            // } else {
+            //     timerImmobile = 0;
+            //     isImmobile = false;
+            //     if (onImmobileAudio.isPlaying == true) {
+            //         onImmobileAudio.Stop();
+            //         onImmobileAudio.volume = 0f;
+            //         // rightSound.DOFade(0.2f, 1f);
+            //         // leftSound.DOFade(0.2f, 1f);
+            //     }
                 
+            // }
+            // if (de)
+            deltaPositionX = Mathf.Abs(charPositionX - oldCharacterPositionX);
+
+            if (Mathf.Abs(charPositionX - oldCharacterPositionX) > 0.1f) {
+                isImmobile = false;
+                timerImmobile = 0;
+                onImmobileAudio.Stop();
+            } else {
+                isImmobile = true;
             }
 
+            
+            // Debug.Log(deltaPositionX);
             // if (mainBodyPosition.x > oldCharacterPosition.x - 0.1f && mainBodyPosition.x < oldCharacterPosition.x + 0.1f) {
             //     isImmobile = true;
             // } else {
@@ -164,24 +184,27 @@ public class CenterDetectionZoneController : MonoBehaviour
                 // LANCE LE CONTEUR ET SI IL EST AU DESSUS DE 3 SECONDES, ON VALIDE LA REPONSE
                 timerImmobile += Time.deltaTime;
                 // Debug.Log("isImmobile " + timerImmobile);
-                
-                if (onImmobileAudio.isPlaying == false && canPlayImmobileAudio) {
-                    // onImmobileAudio.Play();
+
+                if (canPlayImmobileAudioLS == false) {
+                    timerImmobile = 0;
+                }
+
+                if (onImmobileAudio.isPlaying == false && canPlayImmobileAudioLS && timerImmobile >= 2f) {
                     onImmobileAudio.volume = 1f;
-                    onImmobileAudio.PlayDelayed(1f);
-                    // rightSound.DOFade(0.05f, 4f);
-                    // leftSound.DOFade(0.05f, 4f);
+                    Debug.Log(canPlayImmobileAudioLS);
+                    Debug.Log("Play");
+                    onImmobileAudio.Play();
                 }
                 
                 
-                if (timerImmobile > 9f) {
+                if (timerImmobile > 5f && canPlayImmobileAudioLS) {
                     VoixOffGameObject.SetActive(false);
                     // ON VALIDE LA REPONSE ET ON REMET LE TIMER A ZERO ET ON BLOQUE LE VISUEL : ORIGIN NE CHANGE PLUS
                     StartCoroutine(LiberteSecuriteController.ValidLiberteSecurite());
                     timerImmobile = 0;
                     isCheckingPosition = false;
                     isCheckingImmobile = false;
-                    canPlayImmobileAudio = false;
+                    canPlayImmobileAudioLS = false;
                     // if (mainBodyPosition.x < 0f) {
                     //     Debug.Log("right sound chosen");
                     //     rightSound.DOFade(.5f, 1f);
@@ -194,24 +217,21 @@ public class CenterDetectionZoneController : MonoBehaviour
                     //     StartCoroutine(StopAmbiance(leftSound));
                     // }
 
-                    if (playerX < 0f) {
-                        Debug.Log("right sound chosen");
+                    if (charPositionX.Remap(-8, 8, -10, 10) < 0f) {
                         rightSound.DOFade(.5f, 1f);
                         leftSound.DOFade(0f, 1f);
-                        StartCoroutine(StopAmbiance(rightSound));
-                    } else if (playerX > 0f) {
-                        Debug.Log("left sound chosen");
+                        // StartCoroutine(StopAmbiance(rightSound));
+                    } else if (charPositionX.Remap(-8, 8, -10, 10) > 0f) {
                         leftSound.DOFade(.5f, 1f);
                         rightSound.DOFade(0f, 1f);
-                        StartCoroutine(StopAmbiance(leftSound));
+                        // StartCoroutine(StopAmbiance(leftSound));
                     }
                 }
             }
         }
 
-        oldCharacterPosition = mainBodyPosition;
+        oldCharacterPositionX = mainBodyPosition.x;
         oldPlayerPosition = player.position;
-        
     }
 
     IEnumerator StopAmbiance(AudioSource ambiance) {
