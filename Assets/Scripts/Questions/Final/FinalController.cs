@@ -9,6 +9,9 @@ public class FinalController : MonoBehaviour
 {
 
     [SerializeField] GameObject BodySourceView;
+    [SerializeField] GameObject FinalGameObject;
+    [SerializeField] GameObject QRCode;
+    [SerializeField] AudioSource finalVoixOff;
     [SerializeField] UnityEngine.VFX.VisualEffect finalVFX;
 
     private BodySourceView _BodySourceViewManager;
@@ -20,6 +23,8 @@ public class FinalController : MonoBehaviour
     private Vector3 averageHandsPosition = new Vector3(0f, 0f, 0f);
     private Vector3 oldAverageHandsPosition = new Vector3(0f, 0f, 0f);
     private Vector3 handsDirection = new Vector3(0f, 0f, 0f);
+
+    private AudioSource FinalAmbiance;
 
     private float timerImmobile = 0f;
     private float timerInMove = 0f;
@@ -37,6 +42,9 @@ public class FinalController : MonoBehaviour
     void Start()
     {
         _BodySourceViewManager = BodySourceView.GetComponent<BodySourceView>();
+        FinalAmbiance = GetComponent<AudioSource>();
+
+        Run();
     }
 
     // Update is called once per frame
@@ -48,9 +56,9 @@ public class FinalController : MonoBehaviour
 
         averageHandsPosition = (leftHandPosition + rightHandPosition) / 2f;
         
-        if (Mathf.Abs(mainBodyPosition.x - oldCharacterPosition.x) > 0.1f ||
-            Mathf.Abs(mainBodyPosition.y - oldCharacterPosition.y) > 0.1f ||
-            Mathf.Abs(mainBodyPosition.z - oldCharacterPosition.z) > 0.1f ) 
+        if (Mathf.Abs(mainBodyPosition.x - oldCharacterPosition.x) > 0.125f ||
+            Mathf.Abs(mainBodyPosition.y - oldCharacterPosition.y) > 0.125f ||
+            Mathf.Abs(mainBodyPosition.z - oldCharacterPosition.z) > 0.125f ) 
             {
             timerImmobile = 0;
             countImmobile = 0f;
@@ -114,7 +122,15 @@ public class FinalController : MonoBehaviour
         oldAverageHandsPosition = averageHandsPosition;
         oldTimerHandsInMove = timerHandsInMove;
 
-        Debug.Log(countHandsImmobile);
+    }
 
+    public IEnumerator Run() {
+        finalVFX.SetFloat("Count", 100000f);
+        FinalAmbiance.Play();
+        FinalAmbiance.DOFade(1.5f, .5f);
+        finalVoixOff.Play();
+
+        yield return new WaitForSeconds(43.5f);
+        QRCode.SetActive(true);
     }
 }

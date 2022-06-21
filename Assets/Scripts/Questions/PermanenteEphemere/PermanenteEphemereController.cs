@@ -23,10 +23,18 @@ public class PermanenteEphemereController : MonoBehaviour
     [SerializeField] AudioSource EphemereContexte;
     [SerializeField] AudioSource EphemereAmbiance;
     [SerializeField] AudioSource PermanenteAmbiance;
+    [SerializeField] AudioSource EphemereTexture;
+    [SerializeField] AudioSource PermanenteTexture;
     [SerializeField] AudioSource Shutdown;
+    [SerializeField] AudioSource VoixOffAfterShutdown;
+    [SerializeField] AudioSource PermanenteBruitage;
+    [SerializeField] AudioSource EphemereBruitage;
 
     [SerializeField] UnityEngine.VFX.VisualEffect voixOffPermanenteVFX;
     [SerializeField] UnityEngine.VFX.VisualEffect voixOffEphemereVFX;
+    [SerializeField] UnityEngine.VFX.VisualEffect voixOffAfterShutdownVFX;
+
+    [SerializeField] AppartenanceIndependanceController AppartenanceIndependanceController;
 
     private BodySourceView _BodySourceViewManager;
     private Vector3 mainBodyPosition;
@@ -54,18 +62,16 @@ public class PermanenteEphemereController : MonoBehaviour
     {
         
         // StartCoroutine(test());
+        // test();
         // playAmbiances();
         _BodySourceViewManager = BodySourceView.GetComponent<BodySourceView>();
         vfx = GetComponent<VisualEffect>();
     }
 
-    IEnumerator test() {
+    private void test() {
             // voixOffPermanenteVFX.SetFloat("Count", 100000);
-        PermanenteContexte.Play();
-
-        EphemereAmbiance.DOFade(1f, 10f);
-        yield return new WaitForSeconds(8f);
-        Shutdown.Play();
+        // yield return new WaitForSeconds(8f);
+        // Shutdown.Play();
     }
 
     // Update is called once per frame
@@ -103,7 +109,6 @@ public class PermanenteEphemereController : MonoBehaviour
             }
 
             vfx.SetFloat("Intensity", deltaPosition);
-            Debug.Log(canPlayImmobileAudioPEAA);
             
             if (isImmobile && isCheckingImmobilePEAA) {
                 // LANCE LE CONTEUR ET SI IL EST AU DESSUS DE 3 SECONDES, ON VALIDE LA REPONSE
@@ -163,31 +168,62 @@ public class PermanenteEphemereController : MonoBehaviour
         
         if (isBlue) {
             PermanenteAmbiance.DOFade(.3f, 2f);
+            PermanenteTexture.DOFade(.3f, 2f);
             EphemereAmbiance.DOFade(0f, 2f);
+            EphemereBruitage.DOFade(0f, 2f);
             
             yield return new WaitForSeconds(2f);
+            EphemereBruitage.Stop();
             voixOffEphemereVFX.SetFloat("Count", 100000);
             EphemereContexte.Play();
-
+            Shutdown.Play();
             yield return new WaitForSeconds(6f);
             PermanenteAmbiance.DOFade(1f, 8f);
 
         } else if (isRose) {
             EphemereAmbiance.DOFade(.3f, 2f);
             PermanenteAmbiance.DOFade(0f, 2f);
+            PermanenteBruitage.DOFade(0f, 2f);
+            EphemereTexture.DOFade(.3f, 2f);
             
             yield return new WaitForSeconds(2f);
+            PermanenteBruitage.Stop();
             voixOffPermanenteVFX.SetFloat("Count", 100000);
             PermanenteContexte.Play();
+            Shutdown.Play();
 
             yield return new WaitForSeconds(6f);
             EphemereAmbiance.DOFade(1f, 8f);
         }
+
+        yield return new WaitForSeconds(4f);
+        PermanenteAmbiance.Stop();
+        PermanenteTexture.Stop();
+        EphemereAmbiance.Stop();
+        EphemereTexture.Stop();
+        voixOffPermanenteVFX.SetFloat("Count", 0);
+        voixOffEphemereVFX.SetFloat("Count", 0);
+
+
+        yield return new WaitForSeconds(3f);
+        
+        VoixOffAfterShutdown.Play();
+        voixOffAfterShutdownVFX.SetFloat("Count", 100000f);
+
+        yield return new WaitForSeconds(18.5f);
+
+        voixOffAfterShutdownVFX.SetFloat("Count", 0f);
+        yield return new WaitForSeconds(1f);
+        StartCoroutine(AppartenanceIndependanceController.Run());
     }
 
     public void playAmbiances() {
+        PermanenteAmbiance.DOFade(.5f, 0.5f);
+        EphemereAmbiance.DOFade(.5f, 0.5f);
         PermanenteAmbiance.Play();
+        PermanenteBruitage.Play();
         EphemereAmbiance.Play();
+        EphemereBruitage.Play();
     }
 
 }
